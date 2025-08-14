@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Extract the tested GHC versions
         id: create-matrix
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Set up without options
         id: setup
@@ -61,3 +61,20 @@ jobs:
             echo "Is NOT executable"
             exit 1
           fi
+
+  test-setup-action-windows:
+    name: 'Test setup-get-tested action for Windows'
+    runs-on: windows-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v5
+
+      - name: Set up without options
+        id: setup
+        uses: ./setup-get-tested
+
+      - name: Set up with explicit directory
+        id: setup-with-directory
+        uses: ./setup-get-tested
+        with:
+          directory: "my-bin-dir"
