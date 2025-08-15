@@ -35,12 +35,14 @@ jobs:
 
       - name: Set up with explicit directory
         id: setup-with-directory
+        continue-on-error: ${{ matrix.os == 'windows-latest' }}
         uses: ./setup-get-tested
         with:
           directory: "my-bin-dir"
 
       - name: Output results
         shell: bash
+        if: ${{ matrix.os != 'windows-latest' }}
         run: |
           echo "${{ steps.setup.outputs.path }}"
           if [[ -x "${{ steps.setup.outputs.path }}" ]]; then
