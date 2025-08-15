@@ -3,7 +3,7 @@ name: Tests Pipeline
 on:
   pull_request:
   push:
-    branches: ["main"]
+    branches: ["main", "my-main"]
 
 jobs:
   generate-matrix:
