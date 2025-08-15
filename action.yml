@@ -62,7 +62,7 @@ runs:
       #
       # See: https://github.com/actions/runner/issues/895
     - name: Set up get-tested
-      uses: webdevred/get-tested-intern/setup-get-tested@92dcb287fa34d54d5c82c45376400ddfb202908c
+      uses: Kleidukos/get-tested/setup-get-tested@5ae2bde0a17d350c5f7ca542ddd4bbfeadf09cac
       with:
         version: ${{ inputs.version }}
 
@@ -80,7 +80,6 @@ runs:
           echo "WINDOWS=--windows" >> $GITHUB_ENV
         else echo "WINDOWS=" >> $GITHUB_ENV
         fi
-
 
     - name: Set up macOS options
       shell: bash
