@@ -235,19 +235,57 @@ jobs:
     needs: ['build', 'build-alpine']
     permissions:
       contents: write
-
     steps:
-    - uses: actions/download-artifact@v5
+    - name: Checkout repo
+      uses: actions/checkout@v3
+
+    - name: Download all get-tested artifacts (each into its own folder)
+      uses: actions/download-artifact@v5
       with:
-        pattern: get-tested-*
+        pattern: 'get-tested*'
         path: ./out
 
-    - name: Release
+    - name: Debug list ./out (downloaded structure)
+      run: |
+        echo "=== ./out contents ==="
+        ls -lhR ./out || true
+
+    - name: Consolidate artifacts into release_files (unique names)
+      run: |
+        set -eu
+        mkdir -p release_files
+        for p in ./out/*; do
+          if [ -d "$p" ]; then
+            artname=$(basename "$p")
+            for f in "$p"/*; do
+              if [ -f "$f" ]; then
+                base=$(basename "$f")
+                case "$artname" in
+                  *Windows*|*windows*)
+                    zip -j "release_files/${artname}.zip" "$f"
+                    ;;
+                  *Linux*|*linux*|*macOS*|*macos*)
+                    tar -czf "release_files/${artname}.tar.gz" -C "$(dirname "$f")" "$base"
+                    ;;
+                  *)
+                    cp "$f" "release_files/${artname}-${base}"
+                    ;;
+                esac
+              fi
+            done
+          elif [ -f "$p" ]; then
+            base=$(basename "$p")
+            cp "$p" "release_files/${base}"
+          fi
+        done
+        echo "=== release_files contents ==="
+        ls -lh release_files || true
+
+
+    - name: Create GitHub Release (upload files)
       uses: softprops/action-gh-release@v2
       with:
         draft: true
-        files: ./out/*
-        name: v${{ env.version }}
+        files: 'release_files/*'
+        name: ${{ github.ref_name }}
         fail_on_unmatched_files: true
-      env:
-        version: ${{ needs.build-alpine.outputs.version }}
