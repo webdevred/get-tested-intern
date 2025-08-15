@@ -45,6 +45,7 @@ jobs:
           cabal-version: "latest"
 
       - name: Configure
+        shell: bash
         run: |
           ARCHITECTURE=$(uname -m)
           echo "ARCH=$ARCHITECTURE" >> $GITHUB_ENV
@@ -75,6 +76,7 @@ jobs:
           path: ${{ env.REPORT_NAME }}
 
       - name: Install
+        shell: bash
         run: |
           bin=$(cabal -v0 --project-file=cabal.release.project list-bin get-tested)
           mkdir distribution

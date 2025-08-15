@@ -8,68 +8,18 @@ on:
     branches: ['main']
 
 jobs:
-  test-action:
-    name: 'Test get-tested action'
-    runs-on: ubuntu-latest
+  test:
+    name: Test get-tested and setup-get-tested
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
     steps:
-      - name: Checkout the repository
+      - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Extract the tested GHC versions
-        id: create-matrix
-        uses: ./
-        with:
-          cabal-file: get-tested.cabal
-          ubuntu-version: 'latest'
-          macos-version: 'latest'
-
-      - name: Output matrix
-        run: |
-          jq '.' <<< '${{ steps.create-matrix.outputs.matrix }}'
-
-  test-setup-action:
-    name: 'Test setup-get-tested action'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
-
-      - name: Set up without options
-        id: setup
-        uses: ./setup-get-tested
-
-      - name: Set up with explicit directory
-        id: setup-with-directory
-        uses: ./setup-get-tested
-        with:
-          directory: "my-bin-dir"
-
-      - name: Output results
-        run: |
-          echo "${{ steps.setup.outputs.path }}"
-          if [[ -x "${{ steps.setup.outputs.path }}" ]]; then
-            echo "Is executable"
-          else
-            echo "Is NOT executable"
-            exit 1
-          fi
-
-          echo "${{ steps.setup-with-directory.outputs.path }}"
-          if [[ -x "${{ steps.setup-with-directory.outputs.path }}" ]]; then
-            echo "Is executable"
-          else
-            echo "Is NOT executable"
-            exit 1
-          fi
-
-  test-action-windows:
-    name: 'Test get-tested action for Windows'
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
-
-      - name: Extract the tested GHC versions
+      - name: Extract tested GHC versions
         id: create-matrix
         uses: ./
         with:
@@ -82,13 +32,6 @@ jobs:
         run: |
           jq '.' <<< '${{ steps.create-matrix.outputs.matrix }}'
 
-  test-setup-action-windows:
-    name: 'Test setup-get-tested action for Windows'
-    runs-on: windows-latest
-    steps:
-      - name: Checkout the repository
-        uses: actions/checkout@v4
-
       - name: Set up without options
         id: setup
         uses: ./setup-get-tested
@@ -98,3 +41,17 @@ jobs:
         uses: ./setup-get-tested
         with:
           directory: "my-bin-dir"
+
+      - name: Check paths are executable
+        if: ${{ matrix.os }} != "windows-latest"
+        shell: bash
+        run: |
+          for p in "${{ steps.setup.outputs.path }}" "${{ steps.setup-with-directory.outputs.path }}"; do
+            echo "$p"
+            if [[ -x "$p" ]]; then
+              echo "Is executable"
+            else
+              echo "Is NOT executable"
+              exit 1
+            fi
+          done
