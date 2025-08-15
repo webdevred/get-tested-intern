@@ -205,7 +205,7 @@ jobs:
   prerelease-head:
     name: Create a GitHub prerelease with the binary artifacts
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
+    if: github.ref == 'refs/heads/my-main'
     needs: ["build", "build-alpine"]
     permissions:
       contents: write
