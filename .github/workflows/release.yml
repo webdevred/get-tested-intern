@@ -148,9 +148,9 @@ jobs:
       - name: Cache
         uses: actions/cache@v4
         with:
-          key: ${{ runner.os }}-ghc-${{ steps.setup-haskell.outputs.ghc-version }}-${{ hashFiles('**/plan.json') }}
+          key: ${{ runner.os }}-ghc-9.10.2-${{ hashFiles('**/plan.json') }}
           path: ${{ steps.setup-haskell.outputs.cabal-store }}
-          restore-keys: ${{ runner.os }}-ghc-${{ steps.setup-haskell.outputs.ghc-version }}
+          restore-keys: ${{ runner.os }}-ghc-9.10.2-
 
       - name: Build
         run: cabal build --project-file=cabal.static.project
