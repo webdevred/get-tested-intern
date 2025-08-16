@@ -34,7 +34,7 @@ runs:
         # On Windows runners, convert D:\... to /d/...
         tmpdir="$(cygpath -u "$tmpdir")"
         directory_posix="$(cygpath -u "${{ inputs.directory }}")"
-        outfile="get-tested.zip
+        outfile="get-tested.zip"
         ;;
         *)
         directory_posix="${{ inputs.directory }}"
