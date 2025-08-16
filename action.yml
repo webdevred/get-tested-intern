@@ -141,7 +141,6 @@ runs:
       shell: bash
       run: |
         ./get-tested $WINDOWS $MACOS $UBUNTU $RELATIVE_VERSION "${{ inputs.cabal-file }}"
-        ./get-tested $WINDOWS $MACOS $UBUNTU $RELATIVE_VERSION "${{ inputs.cabal-file }}" >> $GITHUB_OUTPUT
 
 
 branding:
