@@ -48,7 +48,7 @@ main = do
 
 saveOutput :: ByteString -> IO ()
 saveOutput json = do
-  maybeOutputFile <- lookupEnv "HOME"
+  maybeOutputFile <- lookupEnv "GITHUB_OUTPUT"
   case maybeOutputFile of
     Just outputFile ->
       ByteString.writeFile outputFile json
