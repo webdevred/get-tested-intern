@@ -34,9 +34,11 @@ runs:
         # On Windows runners, convert D:\... to /d/...
         tmpdir="$(cygpath -u "$tmpdir")"
         directory_posix="$(cygpath -u "${{ inputs.directory }}")"
+        outfile="get-tested.zip
         ;;
         *)
         directory_posix="${{ inputs.directory }}"
+        outfile="get-tested.tar.gz"
         ;;
         esac
 
@@ -55,20 +57,20 @@ runs:
         gh_release_flags=(
         --repo Kleidukos/get-tested
         --pattern "$pattern"
-        --output "${tmpdir}/get-tested.tar.gz"
+        --output "${tmpdir}/${outfile}"
         )
 
         if [[ "${{ inputs.version }}" != "" ]]; then
-        gh release download "${{ inputs.version }}" "${gh_release_flags[@]}"
+        gh release download "v${{ inputs.version }}" "${gh_release_flags[@]}"
         else
         gh release download "${gh_release_flags[@]}"
         fi
 
         mkdir -p "$directory_posix"
         if [[ "$os" == "windows" ]]; then
-          unzip -o "${tmpdir}/get-tested.zip" -d "$directory_posix"
+          unzip -o "${tmpdir}/${outfile}" -d "$directory_posix"
         else
-          tar -xvzf "${tmpdir}/get-tested.tar.gz" -C "$directory_posix"
+          tar -xvzf "${tmpdir}/${outfile}" -C "$directory_posix"
         fi
 
         path="${directory_posix}/get-tested"
