@@ -65,7 +65,7 @@ jobs:
 
       - name: Test
         run: |
-          cabal test --project-file=cabal.release.project --test-options "--xml=../get-tested/${{ env.REPORT_NAME }}" all
+          cabal test --project-file=cabal.release.project --test-options "--xml=./${{ env.REPORT_NAME }}" all
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
@@ -145,7 +145,7 @@ jobs:
 
       - name: Test
         run: |
-          cabal test --project-file=cabal.static.project --test-options "--xml=../get-tested/${{ env.REPORT_NAME }}" all
+          cabal test --project-file=cabal.static.project --test-options "--xml=./${{ env.REPORT_NAME }}" all
 
       - name: Upload the test report
         uses: actions/upload-artifact@v4
