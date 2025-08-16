@@ -61,7 +61,7 @@ runs:
         )
 
         if [[ "${{ inputs.version }}" != "" ]]; then
-        gh release download "v${{ inputs.version }}" "${gh_release_flags[@]}"
+        gh release download "${{ inputs.version }}" "${gh_release_flags[@]}"
         else
         gh release download "${gh_release_flags[@]}"
         fi
